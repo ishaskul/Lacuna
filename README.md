@@ -1,16 +1,35 @@
-# Lacuna V2
-A cleaner, simpler, production ready version of Lacuna.
+# Lacuna 
+An approach for JavaScript dead code elimination, where existing JavaScript analysis techniques are applied in combination.
 
-`node ./lacuna <sourceFolder> -a static`
+## Publications about Lacuna
 
-_Note if the entry file isn't index.html, specify it using the entry param_
+The main principles, structure, and empirical evaluation of a first version of Lacuna are available in the following scientific publication:
+- Niels Groot Obbink, Ivano Malavolta, Gian Luca Scoccia, Patricia Lago (2018). An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination. In Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on, pp. 291–401. [PDF](https://github.com/S2-group/android-runner/blob/master/publications/SANER_2018.pdf) 
 
+If Lacuna is helping your research, consider to cite it as follows, thanks!
 
-Lacuna can also be integrated in any nodeJS project:
-```nodejs
-const lacuna = require("./lacuna_runner")
-lacuna.run(runOptions);
+``` 
+@inproceedings{SANER_2018,
+  url = { https://github.com/S2-group/android-runner/blob/master/publications/SANER_2018.pdf },
+  organization = { IEEE },
+  year = { 2018 },
+  pages = { 291--401 },
+  booktitle = { Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on },
+  author = { Niels Groot Obbink and Ivano Malavolta and Gian Luca Scoccia and Patricia Lago },
+  title = { An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination },
+}
 ```
+
+## Installation
+Install the dependent libraries `npm install`
+
+Install the dependencies for the different analysers (should only be necessary
+if you want to use them)
+- `npm --prefix ./analyzers/static install ./analyzers/static`
+- `npm --prefix ./analyzers/dynamic install ./analyzers/dynamic`
+- `npm --prefix ./analyzers/nativecalls install ./analyzers/nativecalls`
+- `npm --prefix ./analyzers/wala_full install ./analyzers/wala_full`
+- `npm --prefix ./analyzers/wala_single install ./analyzers/wala_single`
 
 ## How to use
 The intuition is that lacuna runs on a source folder; Relative to this folder 
@@ -141,18 +160,6 @@ Notice that having multiple references to:
 https://code.jquery.com/jquery-3.4.0.min.js
 
 will store them in the same local file under the name jquery-3.4.0.min.js.
-
-## Installation
-Install the dependent libraries `npm install`
-
-Install the dependencies for the different analysers (should only be necessary
-if you want to use them)
-- `npm --prefix ./analyzers/static install ./analyzers/static`
-- `npm --prefix ./analyzers/dynamic install ./analyzers/dynamic`
-- `npm --prefix ./analyzers/nativecalls install ./analyzers/nativecalls`
-- `npm --prefix ./analyzers/wala_full install ./analyzers/wala_full`
-- `npm --prefix ./analyzers/wala_single install ./analyzers/wala_single`
-
 
 ## Development
 
