@@ -4,13 +4,13 @@ An approach for JavaScript dead code elimination, where existing JavaScript anal
 ## Publications about Lacuna
 
 The main principles, structure, and empirical evaluation of a first version of Lacuna are available in the following scientific publication:
-- Niels Groot Obbink, Ivano Malavolta, Gian Luca Scoccia, Patricia Lago (2018). An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination. In Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on, pp. 291–401. [PDF](https://github.com/S2-group/android-runner/blob/master/publications/SANER_2018.pdf) 
+- Niels Groot Obbink, Ivano Malavolta, Gian Luca Scoccia, Patricia Lago (2018). An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination. In Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on, pp. 291–401. [PDF](https://github.com/S2-group/Lacuna/blob/master/publications/SANER_2018.pdf) 
 
 If Lacuna is helping your research, consider to cite it as follows, thanks!
 
 ``` 
 @inproceedings{SANER_2018,
-  url = { https://github.com/S2-group/android-runner/blob/master/publications/SANER_2018.pdf },
+  url = { https://github.com/S2-group/Lacuna/blob/master/publications/SANER_2018.pdf },
   organization = { IEEE },
   year = { 2018 },
   pages = { 291--401 },
