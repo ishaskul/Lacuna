@@ -3,12 +3,26 @@ An approach for JavaScript dead code elimination, where existing JavaScript anal
 
 ## Publications about Lacuna
 
+A in-depth description of the Lacuna approach, its implementation, its internal and external evaluation, and an empirical study on the overhead of JavaScript dead code on the energy and performance of mobile Web apps, please refer to the following publication:
+- Ivano Malavolta, Kishan Nirghin, Gian Luca Scoccia, Simone Romano, Salvatore Lombardi (2023). JavaScript Dead Code Identification, Elimination, and Empirical Assessment. IEEE Transactions on Software Engineering (TSE) - [PDF](http://www.ivanomalavolta.com/files/papers/TSE_2023.pdf)
+
 The main principles, structure, and empirical evaluation of a first version of Lacuna are available in the following scientific publication:
-- Niels Groot Obbink, Ivano Malavolta, Gian Luca Scoccia, Patricia Lago (2018). An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination. In Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on, pp. 291–401. [PDF](https://github.com/S2-group/Lacuna/blob/master/publications/SANER_2018.pdf) 
+- Niels Groot Obbink, Ivano Malavolta, Gian Luca Scoccia, Patricia Lago (2018). An Extensible Approach for Taming the Challenges of JavaScript Dead Code Elimination. In Software Analysis, Evolution and Reengineering (SANER), 2018 IEEE 25th International Conference on, pp. 291–401 - [PDF](https://github.com/S2-group/Lacuna/blob/master/publications/SANER_2018.pdf) 
+
+
 
 If Lacuna is helping your research, consider to cite it as follows, thanks!
 
 ``` 
+@article{TSE_2023, 
+author={Ivano Malavolta and Kishan Nirghin and {Gian Luca} Scoccia and Simone Romano and Salvatore Lombardi and Giuseppe Scanniello and Patricia Lago}, 
+journal={IEEE Transactions on Software Engineering}, 
+title={{JavaScript Dead Code Identification, Elimination, and Empirical Assessment}}, 
+year={2023}, 
+doi={10.1109/TSE.2023.3267848}, 
+url = {http://www.ivanomalavolta.com/files/papers/TSE_2023.pdf}
+}
+
 @inproceedings{SANER_2018,
   url = { https://github.com/S2-group/Lacuna/blob/master/publications/SANER_2018.pdf },
   organization = { IEEE },
