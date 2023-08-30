@@ -45,6 +45,9 @@ if you want to use them)
 - `npm --prefix ./analyzers/wala_full install ./analyzers/wala_full`
 - `npm --prefix ./analyzers/wala_single install ./analyzers/wala_single`
 
+## If the dynamic analyser fails, try installing it by ignoring the scripts
+- `npm --prefix ./analyzers/dynamic install ./analyzers/dynamic --ignore-scripts`
+
 ## How to use
 The intuition is that lacuna runs on a source folder; Relative to this folder 
 it will will look for the entry file. From the entry file, all references to 
