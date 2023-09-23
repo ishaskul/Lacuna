@@ -10,7 +10,7 @@
 require('./native_extentions');
 
 const file_system = require('fs'),
-	esprima = require('esprima'),
+esprima = require('esprima-next'),
 path = require("path");
 
 

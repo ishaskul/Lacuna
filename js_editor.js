@@ -8,7 +8,7 @@
  */
 
 const fs = require("fs"),
-    esprima = require("esprima"),
+    esprima = require("esprima-next"),
     path = require("path");
 
 require("./prototype_extension");
