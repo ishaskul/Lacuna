@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "esprima": "3.*"
+    "esprima-next": "3.*"
+  },
+  "dependencies": {
+    "amdefine": "^1.0.1",
+    "sloc": "^0.3.0"
   }
 }

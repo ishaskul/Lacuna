@@ -6,7 +6,7 @@
 	Exports several functions that deal with analysing and modifying JavaScript source code.
 */
 
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 
 
