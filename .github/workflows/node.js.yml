@@ -28,5 +28,6 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
+    - run: npm --prefix ./analyzers/static install ./analyzers/static
     - run: npm test
       shell: bash
