@@ -1,5 +1,5 @@
 {
   "devDependencies": {
-    "esprima-next": "3.*"
+    "esprima-next": "5.*"
   }
 }
