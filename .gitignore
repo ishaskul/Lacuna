@@ -1,5 +1,4 @@
 node_modules
-example
 exceptions.log
 analyzers/ACG/javascript-call-graph
 analyzers/npm_cg/callgraph
