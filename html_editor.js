@@ -38,6 +38,9 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) { return; }
 
             /* Assume the script is hosted on same server */
@@ -104,6 +107,9 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) return;
 
             var scriptSrc = cScriptElement.attribs["src"];
@@ -156,6 +162,9 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) { return; }
             
             // Add a unique id to each script element
