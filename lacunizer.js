@@ -125,7 +125,7 @@ async function createCompleteCallGraph(runOptions, onCallGraphComplete) {
     var callGraph = new CallGraph(retrieveFunctions(scripts));
 
     /* Part 2: running every analyzer to create edges in the callgraph */
-    var analyzers = retrieveAnalyzers(runOptions.analyzer);
+    var analyzers = retrieveAnalyzers(Object.keys(runOptions.analyzer));
     var analyzerResults = [];
     var analyzersCompleted = {}; // wait for all analyzers to be finished
 

@@ -200,17 +200,38 @@ async function verifyRunOptions(runOptions) {
     /* STOPS HERE */
     if (runOptions.normalizeOnly) return;
 
-    /* Verify runOptions.analyzer */
-    if (!runOptions.analyzer || runOptions.analyzer.length <= 0) {
-            throw logger.error("Invalid analyzer: " + runOptions.analyzer);
+    /* Verify analyzer json string */
+    if (!isValidJson(runOptions.analyzer)) {
+        throw logger.error("Invalid JSON string: " + JSON.stringify(runOptions.analyzer));
+    } else {
+        runOptions.analyzer = JSON.parse(runOptions.analyzer)
     }
-    runOptions.analyzer.forEach((analyzer) => {   
+
+    /* Verify runOptions.analyzer */
+    if (!runOptions.analyzer || Object.keys(runOptions.analyzer).length <= 0) {
+        throw logger.error("Invalid analyzer: " + JSON.stringify(runOptions.analyzer));
+    }
+    Object.keys(runOptions.analyzer).forEach((analyzer) => {
         var analyzerPath = path.join(__dirname, lacunaSettings.ANALYZERS_DIR, analyzer) + ".js";
         if (!fs.existsSync(analyzerPath)) {
             throw logger.error("Invalid analyzer: " + analyzer);
         }
     });
     logger.silly("runOptions.analyzer OK");
+
+    /* Verify threshold weights assigned to analyzers */
+    Object.keys(runOptions.analyzer).forEach(function(analyzer) {
+        var thresholdWeight = runOptions.analyzer[analyzer];
+        var parsedThresholdWeight = parseFloat(thresholdWeight);
+        if(isNaN(parsedThresholdWeight)) {
+            throw logger.error("Invalid threshold weight assigned for analyzer: " + analyzer);
+        }
+
+        if(!(parsedThresholdWeight >= 0 && parsedThresholdWeight <= 1)) {
+            throw logger.error("Invalid threshold weight assigned for analyzer: " + analyzer);
+        }
+
+      });
 
     /* Verify runOptions.olevel */
     if (!lacunaSettings.OPTIMIZATION_LEVELS.includes(runOptions.olevel)) {
@@ -229,6 +250,14 @@ function prompt(msg) {
     return new Confirm(msg).run();
 }
 
+function isValidJson(jsonString) {
+    try {
+        JSON.parse(jsonString)
+    } catch (e) {
+        return false
+    }
+    return true;
+}
 
 module.exports = {
     run
