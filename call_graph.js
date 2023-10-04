@@ -37,6 +37,7 @@ module.exports = class CallGraph {
 
         /* Note: these aren't functions, rather the files that call functions */
         this.rootNodes = [];
+        this.edgeWeight = 0;
 
         functions.forEach((functionData) => {
             this.addNode(functionData);
@@ -103,8 +104,16 @@ module.exports = class CallGraph {
         var caller = this.getNode(functionDataCaller);
         var callee = this.getNode(functionDataCallee);
 
+        if (analyzer === "dynamic") {
+            this.edgeWeight = 1.0;
+        } else {
+            this.edgeWeight = 0.5;
+        }
+
+        var edgeWeight = this.edgeWeight;
+
         if (!caller || !callee) { return null; }
-        return caller.addEdge(callee, analyzer, stripObject);
+        return caller.addEdge(callee, analyzer, stripObject, edgeWeight);
     }
 
     /** 
