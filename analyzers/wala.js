@@ -47,7 +47,7 @@ module.exports = function() {
  */
 function walaAnalyzer(file, callback) {
 	var jarFile = path.join(__dirname, 'wala', 'JSONCallGraph.jar');
-	let command = 'java -jar ' + jarFile + ' ' + file;
+	let command = 'java -jar ' + jarFile + ' ' + `${file}`;
 	let settings = {
 		maxBuffer: 1024 * 1000 * 1000,	// 1 GB
 		//timeout: lacunaSettings.ANALYZER_TIMEOUT
