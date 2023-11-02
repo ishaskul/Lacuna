@@ -8,7 +8,7 @@
  */
 
 const fs = require("fs"),
-    esprima = require("esprima-next"),
+    esprima = require("espree"),
     path = require("path");
 
 require("./prototype_extension");
@@ -41,7 +41,15 @@ module.exports = class JsEditor {
         var index = 0;
 
         try {
-            esprima.parse(this.source, { range: true, loc: true }, (node) => {
+            const ast = esprima.parse(this.source, { ecmaVersion: 14,
+                range: true, 
+                loc: true,
+                ecmaFeatures: {
+                   jsx: true,
+                   globalReturn: true
+                }});
+            
+                traverseAST(ast, (node) => {
                 if (ESPRIMA_FUNCTION_TYPES.includes(node.type)) {
                     var functionName = null;
                     if (node.id && node.id.name) {
@@ -136,4 +144,14 @@ function getRandomFilename(length) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
   
     return text;
+}
+
+function traverseAST(ast, callback) {
+	callback(ast);
+  
+	for (const node in ast) {
+	  if (ast[node] && typeof ast[node] === 'object') {
+		traverseAST(ast[node], callback);
+	  }
+	}
 }
