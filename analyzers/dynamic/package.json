@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "command-line-args": "5.*",
-    "esprima-next": "5.*",
+    "espree": "^9.6.1",
     "phantomjs-prebuilt-that-works": "^3.0.1",
     "selenium-webdriver": "^4.13.0"
   },

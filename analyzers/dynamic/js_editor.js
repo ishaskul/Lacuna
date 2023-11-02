@@ -10,7 +10,7 @@
 require('./native_extentions');
 
 const file_system = require('fs'),
-esprima = require('esprima-next'),
+esprima = require('espree'),
 path = require("path");
 
 
@@ -92,9 +92,15 @@ module.exports = function()
 
 		let last_function = null;
 
-		esprima.parse(source, {range: true}, function(node, meta)
-		{
-			// We are only interested in functions (declarations and expressions).
+		const ast = esprima.parse(source, {ecmaVersion: 14,
+			range: true, 
+			ecmaFeatures: {
+			   jsx: true,
+			   globalReturn: true
+			}});
+
+		traverseAST(ast, (node) => {
+			// Process each node here
 			if(node.type == 'FunctionDeclaration' || node.type == 'FunctionExpression')
 			{
 				let containing_function = last_function;
@@ -124,7 +130,7 @@ module.exports = function()
 				// Save the function data.
 				functions.push(function_data);
 			}
-		});
+		  });
 
 		// Esprima doesn't return an ordered node list, so sort the functions based on starting position.
 		functions = functions.sort(function(a, b)
@@ -135,3 +141,13 @@ module.exports = function()
 		return functions;
 	};
 };
+
+function traverseAST(ast, callback) {
+	callback(ast);
+  
+	for (const node in ast) {
+	  if (ast[node] && typeof ast[node] === 'object') {
+		traverseAST(ast[node], callback);
+	  }
+	}
+}
