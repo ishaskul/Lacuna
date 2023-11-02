@@ -126,7 +126,7 @@ Based on the internal callgraphs of IBM WALA
 
 ##### TAJS
 Based on TAJS
-Some notable fixes are:
+Some notable fixes are :
 by default TAJS stops processing JavaScript files whenever it encounters a console.log
 ( maybe also other native JavaScript calls ); thus to bypass this issue TAJS was modified.
 
