@@ -17,12 +17,13 @@ module.exports = class Node {
      * 
      * NOTE multiple edges can exist between the same nodes
      */
-    addEdge(node, analyzer, stripObject) {
-        var edge = new Edge(this, node, analyzer);
+    addEdge(node, analyzer, stripObject, weight) {
+        var edge = new Edge(this, node, analyzer, weight);
         this.edges.push(edge);
 
         var caller = edge.caller;
         var callee = edge.callee;
+        var weight = edge.weight;
 
         if (stripObject) {
             caller = caller.functionData;
@@ -30,7 +31,8 @@ module.exports = class Node {
         }
         return {
             caller,
-            callee
+            callee,
+            weight
         }
     }
 
@@ -73,7 +75,7 @@ module.exports = class Node {
         consideredNodes.push(this);
 
         this.edges.forEach((edge) => {
-            dotty.addEdge(this.__str__(), edge.callee.__str__(), { label: edge.analyzer });
+            dotty.addEdge(this.__str__(), edge.callee.__str__(), { label: `${edge.analyzer}:${edge.weight.toString()}` });
             
             /* Recursively add grand-child relations */
             edge.callee.addToDotify(dotty, consideredNodes); 
