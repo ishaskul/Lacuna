@@ -78,7 +78,7 @@ function tajsAnalyzer(file, callback) {
  *  callee: {file: <String>, start: { line: groups.line, column: groups.column }}
  * }]
  * 
- * NOTE: esprima counts columns from 0, whilst tajs starts at 1.
+ * NOTE: espree counts columns from 0, whilst tajs starts at 1.
  */
 function tajsToLacunaFormatter(output) {
     var edges = [];

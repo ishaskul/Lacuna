@@ -1,6 +1,6 @@
-var bindings = require('./javascript-call-graph/bindings');
-var astutil = require('./javascript-call-graph/astutil');
-var pessimistic = require('./javascript-call-graph/pessimistic');
+var bindings = require('./js-callgraph/src/bindings')
+var astutil = require('./js-callgraph/src/astutil')
+var semioptimistic = require('./js-callgraph/src/semioptimistic');
 var path = require("path");
 
 function run(files, callback) {

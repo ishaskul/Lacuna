@@ -10,7 +10,7 @@
 require('./native_extentions');
 
 const file_system = require('fs'),
-esprima = require('espree'),
+espree = require('espree'),
 path = require("path");
 
 
@@ -92,7 +92,7 @@ module.exports = function()
 
 		let last_function = null;
 
-		const ast = esprima.parse(source, {ecmaVersion: 14,
+		const ast = espree.parse(source, {ecmaVersion: 14,
 			range: true, 
 			ecmaFeatures: {
 			   jsx: true,
@@ -132,7 +132,7 @@ module.exports = function()
 			}
 		  });
 
-		// Esprima doesn't return an ordered node list, so sort the functions based on starting position.
+		// Espree doesn't return an ordered node list, so sort the functions based on starting position.
 		functions = functions.sort(function(a, b)
 		{
 			return a.start - b.start;

@@ -36,7 +36,8 @@ async function run(passedRunOptions, callback) {
 
         /* debug options */
         normalizeOnly: false, /* TODO cannot be used icw assumeNormalization */
-        assumeNormalization: false /* TODO only makes sense if there is a complete lacuna cache present */
+        assumeNormalization: false, /* TODO only makes sense if there is a complete lacuna cache present */
+        currentlyRunningAnalyzer: null
     };
     
     if (!passedRunOptions) { throw logger.error("Invalid runOptions"); }
@@ -128,7 +129,7 @@ function startLacuna(runOptions, callback) {
             fs.writeFileSync(logPath, JSON.stringify(lacuna_log, null, 4), 'utf8');
 
             var DOTLogPath = path.join(runOptions.directory, lacunaSettings.LACUNA_OUTPUT_DIR, "callgraph.dot");
-            fs.writeFileSync(DOTLogPath, callGraph.getDOT(), 'utf8');
+            fs.writeFileSync(DOTLogPath, callGraph.getDOT(analyzerResults), 'utf8');
 
             logger.info(`Lacuna finished.\nSee results in: ${logPath}`);
 
@@ -212,23 +213,27 @@ async function verifyRunOptions(runOptions) {
         throw logger.error("Invalid analyzer: " + JSON.stringify(runOptions.analyzer));
     }
     Object.keys(runOptions.analyzer).forEach((analyzer) => {
-        var analyzerPath = path.join(__dirname, lacunaSettings.ANALYZERS_DIR, analyzer) + ".js";
+        if (lacunaSettings.STATIC_ANALYZERS.includes(analyzer)) {
+            var analyzerPath = path.join(__dirname, lacunaSettings.ANALYZERS_DIR, 'js-callgraph') + ".js";
+        } else {
+            var analyzerPath = path.join(__dirname, lacunaSettings.ANALYZERS_DIR, analyzer) + ".js";
+        }
         if (!fs.existsSync(analyzerPath)) {
             throw logger.error("Invalid analyzer: " + analyzer);
         }
     });
     logger.silly("runOptions.analyzer OK");
 
-    /* Verify threshold weights assigned to analyzers */
+    /* Verify weights assigned to analyzers */
     Object.keys(runOptions.analyzer).forEach(function(analyzer) {
         var thresholdWeight = runOptions.analyzer[analyzer];
         var parsedThresholdWeight = parseFloat(thresholdWeight);
         if(isNaN(parsedThresholdWeight)) {
-            throw logger.error("Invalid threshold weight assigned for analyzer: " + analyzer);
+            throw logger.error("Invalid weight assigned for analyzer: " + analyzer);
         }
 
         if(!(parsedThresholdWeight >= 0 && parsedThresholdWeight <= 1)) {
-            throw logger.error("Invalid threshold weight assigned for analyzer: " + analyzer);
+            throw logger.error("Invalid weight assigned for analyzer: " + analyzer);
         }
 
       });

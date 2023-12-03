@@ -4,6 +4,7 @@ module.exports = {
      */
     ANALYZERS_DIR: "analyzers",
     ANALYZER_TIMEOUT: 5000, // miliseconds
+    STATIC_ANALYZERS: ['static','nativecalls','acg'],
 
 
     /**

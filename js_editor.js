@@ -8,13 +8,13 @@
  */
 
 const fs = require("fs"),
-    esprima = require("espree"),
+    espree = require("espree"),
     path = require("path");
 
 require("./prototype_extension");
 
 
-const ESPRIMA_FUNCTION_TYPES = ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression'];
+const ESPREE_FUNCTION_TYPES = ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression'];
 module.exports = class JsEditor {
     constructor(filePath = null) {
         if (filePath) { this.loadFile(filePath); }
@@ -41,7 +41,7 @@ module.exports = class JsEditor {
         var index = 0;
 
         try {
-            const ast = esprima.parse(this.source, { ecmaVersion: 14,
+            const ast = espree.parse(this.source, { ecmaVersion: 14,
                 range: true, 
                 loc: true,
                 ecmaFeatures: {
@@ -50,7 +50,7 @@ module.exports = class JsEditor {
                 }});
             
                 traverseAST(ast, (node) => {
-                if (ESPRIMA_FUNCTION_TYPES.includes(node.type)) {
+                if (ESPREE_FUNCTION_TYPES.includes(node.type)) {
                     var functionName = null;
                     if (node.id && node.id.name) {
                         functionName = node.id.name;
