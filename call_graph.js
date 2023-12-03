@@ -34,6 +34,7 @@ module.exports = class CallGraph {
     constructor(functions) {
         this.nodes = [];
         this.edges = [];
+        this.nativeEdges = [];
 
         /* Note: these aren't functions, rather the files that call functions */
         this.rootNodes = [];
@@ -101,8 +102,8 @@ module.exports = class CallGraph {
             this.rootNodes.push(new Node(functionDataCaller));
         }
         
-        var caller = this.getNode(functionDataCaller);
-        var callee = this.getNode(functionDataCallee);
+        var caller = this.getNode(functionDataCaller, false, analyzer);
+        var callee = this.getNode(functionDataCallee, false, analyzer);
 
         if (analyzer === "dynamic") {
             this.edgeWeight = 1.0;
@@ -113,18 +114,27 @@ module.exports = class CallGraph {
         var edgeWeight = this.edgeWeight;
 
         if (!caller || !callee) { return null; }
+
+        if (analyzer === "nativecalls") {
+            var edge = caller.addEdge(callee, analyzer, stripObject, edgeWeight)
+            if (!edge.hasOwnProperty('analyzer')) {
+                edge['analyzer'] = analyzer;
+            }
+            this.nativeEdges.push(edge)
+        }
+
         return caller.addEdge(callee, analyzer, stripObject, edgeWeight);
     }
 
     /** 
      * Fetches an existing nodeObject given its functionData
      */
-    getNode(functionData, excludeRootNodes) {
+    getNode(functionData, excludeRootNodes, analyzer) {
         var nodeList = this.nodes;
         if (!this.fitsNode(functionData)) {
             if (!(this.fitsRootNode(functionData))) {
                 logger.warn("[getNode] Invalid node", functionData);
-                return null;    
+                return null;
             }
             if (excludeRootNodes) {
                 logger.warn("[getNode] rootNodes excluded", functionData);
@@ -133,15 +143,24 @@ module.exports = class CallGraph {
             /* continue with rootNodes */
             nodeList = this.rootNodes;
         }
-
-        for (var i = 0; i < nodeList.length; i++){
-            var node = nodeList[i];
-            if (node.functionData.file == functionData.file &&
-                node.functionData.range[0] == functionData.range[0] &&
-                node.functionData.range[1] == functionData.range[1]) {
-                return node;
+        /*this approach is required for jelly since the order of the edges 
+        returned in CG does not match with the order retured by espree.parse*/ 
+        if (analyzer === "jelly") { 
+            const foundNode = nodeList.find(node =>
+                node.functionData.file === functionData.file && node.functionData.range[0] === functionData.range[0] && node.functionData.range[1] === functionData.range[1]);
+            if (foundNode) {
+                return foundNode;
             }
-        };
+        } else {
+            for (var i = 0; i < nodeList.length; i++) {
+                var node = nodeList[i];
+                if (node.functionData.file == functionData.file &&
+                    node.functionData.range[0] == functionData.range[0] &&
+                    node.functionData.range[1] == functionData.range[1]) {
+                    return node;
+                }
+            };
+        }
 
         logger.warn("[getNode] not found", functionData);
         return null;
@@ -224,11 +243,23 @@ module.exports = class CallGraph {
     /** 
      * Gets the DOT representation of the current callgraph
      */
-    getDOT() {
+    getDOT(analyzerResults) {
         var dotty = new Dotify("digraph", "lacunaCG"); 
 
         /* the expanding list of considered nodes => prevents infinite loops */
         var consideredNodes = [];
+        const result = analyzerResults.find(analysedResult => {
+            return analysedResult.analyzer
+          });
+
+        if (result.analyzer === "nativecalls" ) {
+            this.nativeEdges.forEach ((object, index) => {
+                const rootNodeindex = this.rootNodes.findIndex(node => {
+                    return node.functionData.file.includes(object.caller.functionData.file);
+                  }); 
+                  this.rootNodes[rootNodeindex].edges.push(object)
+            })
+        }
         this.rootNodes.forEach((node) => {
             node.addToDotify(dotty, consideredNodes);
         });
@@ -324,12 +355,12 @@ module.exports = class CallGraph {
      * 
      * Usecase
      */
-    convertToFunctionData(nodeData) {
+    convertToFunctionData(nodeData, analyzer) {
         var functionData = {};
 
         if (nodeData.hasOwnProperty("functionName")) {
             var nodes = this.getNodes(true);
-            for (var i = 0; i < nodes.length; i++){
+            for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].functionName == nodeData.functionName) {
                     return { file: nodes[i].file, range: nodes[i].range };
                 }
@@ -346,12 +377,21 @@ module.exports = class CallGraph {
         if (!nodeData.hasOwnProperty("range") && nodeData.hasOwnProperty("start")) {
             var nodes = this.getNodes(true);
 
-            for (var i = 0; i < nodes.length; i++) {
-                var node = nodes[i];
+            if (analyzer === "jelly") {
+                const foundNode = nodes.find(node =>
+                    node.start.line === nodeData.start.line && node.start.column === nodeData.start.column);
+                if (foundNode) {
+                    functionData.range = foundNode.range;
+                    // console.log("Yes found!" + JSON.stringify(foundNode))
+                }
+            } else {
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
 
-                if (node.start.line == nodeData.start.line && node.start.column == nodeData.start.column) {
-                    functionData.range = node.range;
-                    break;
+                    if (node.start.line == nodeData.start.line && node.start.column == nodeData.start.column) {
+                        functionData.range = node.range;
+                        break;
+                    }
                 }
             }
         }
