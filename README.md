@@ -268,7 +268,7 @@ will store them in the same local file under the name jquery-3.4.0.min.js.
 ### Overview of recent enhancements
 - Since Esprima has not been developed further since many years, Lacuna has been updated to use Espree as the ECMAScript parsing infrastructure. Espree is compatible with Esprime format and it supports the latest ECMAScript
 - All the underlying dependencies of Lacuna have been updated to the latest versions
-- Lacunce supports ES6 syntax for all analyzers except TAJS and WALA analyzers
+- Lacuna supports ES6 syntax for all analyzers except TAJS and WALA analyzers
 - Jelly analyzer adapted has been integrated in lacuna
 - Probabilistic approach has been incorporated in Lacuna to provide further code optimization
 
