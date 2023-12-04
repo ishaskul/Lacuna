@@ -196,7 +196,8 @@ Abstract call graph is our implementation of field-based approach for static ana
 
 NOTE: Static, nativecalls and ACG analyzers internally make use of the js-callgraph analyzer that has been adapted for the needs of Lacuna as a part of the following forked repository:
 [js-callgraph](https://github.com/ishaskul/js-callgraph)
-original repository: [js-callgraph](https://github.com/gaborantal/js-callgraph)
+
+Original repository: [js-callgraph](https://github.com/gaborantal/js-callgraph)
 
 ##### dynamic
 A basic dynamic analyzer that starts up a puppeteer webdriver and marks every
@@ -207,6 +208,7 @@ Based on the internal callgraphs of IBM WALA. WALA supports up to ES5 syntax onl
 
 ##### npm_cg
 npm_cg is a handy tool for producing call graphs from JavaScript source code. It has a limitation in that it can consider a single JavaScript file at a time only
+
 original repository: [npm_cg](https://github.com/gunar/callgraph)
 
 ##### TAJS
