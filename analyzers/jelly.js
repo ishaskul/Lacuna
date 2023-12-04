@@ -10,7 +10,8 @@
 const path = require("path"),
 	child_process = require("child_process"),
     fs = require('fs'),
-    logger = require("../_logger");
+    logger = require("../_logger"),
+    lacunaSettings = require("../_settings");
 
 
 
@@ -48,8 +49,8 @@ module.exports = function()
  */
 function jellyAnalyzer(entryDirectory, callback) {
     var pathToJellyAnalyzer = path.join(__dirname, 'jelly', 'lib/main.js');
-    var pathForStoringCG = path.join(entryDirectory, "lacuna_cache", 'jelly-callgraph.json');
-    var pathForCallGraphText = path.join(entryDirectory,"lacuna_cache",'jelly-callgraph.txt');
+    var pathForStoringCG = path.join(entryDirectory, lacunaSettings.LACUNA_OUTPUT_DIR, 'jelly-callgraph.json');
+    var pathForCallGraphText = path.join(entryDirectory,lacunaSettings.LACUNA_OUTPUT_DIR,'jelly-callgraph.txt');
     let command = `node ${pathToJellyAnalyzer} -j ${pathForStoringCG} -c${pathForCallGraphText} --callgraph ${entryDirectory}`
     
     console.log(command);

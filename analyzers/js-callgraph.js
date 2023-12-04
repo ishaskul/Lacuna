@@ -11,8 +11,8 @@ const path = require("path"),
 	child_process = require("child_process"),
     fs = require('fs'),
     logger = require("../_logger"),
-    acg = require('../analyzers/acg.js');
-
+    acg = require('../analyzers/acg.js'),
+    lacunaSettings = require("../_settings");
 
 
 module.exports = function()
@@ -76,10 +76,10 @@ module.exports = function()
  */
 function jsCallgraphAnalyzer(entryDirectory, analyzer,  callback) {
     var pathToAnalyzer = path.join(__dirname, 'js-callgraph', 'js-callgraph.js');
-    var lacunaCachePath = path.join(entryDirectory, 'lacuna_cache');
+    var lacunaCachePath = path.join(entryDirectory, lacunaSettings.LACUNA_OUTPUT_DIR);
     var pathForStoringCG = path.join(lacunaCachePath, 'js-cg.json');
     var strategy = analyzer === 'acg' ? 'ONESHOT' : 'DEMAND'
-    let command = `node ${pathToAnalyzer} --strategy ${strategy} --cg --analyzertype ${analyzer} --output ${pathForStoringCG} ${lacunaCachePath}`
+    let command = `node ${pathToAnalyzer} --strategy ${strategy} --cg --analyzertype ${analyzer} --output ${pathForStoringCG} ${entryDirectory}`
     
     console.log(command);
     child_process.exec(command, function (error, stdout, stderr) {

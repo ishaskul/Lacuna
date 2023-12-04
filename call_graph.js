@@ -27,7 +27,7 @@
 
 const { Dotify, objectToDOT } = require("./dotify");
 const logger = require("./_logger");
-
+const lacunaSettings = require("./_settings");
 const Node = require("./call_graph-node");
 
 module.exports = class CallGraph {
@@ -106,7 +106,7 @@ module.exports = class CallGraph {
         var callee = this.getNode(functionDataCallee, false, analyzer);
 
         if (analyzer === "dynamic") {
-            this.edgeWeight = 1.0;
+            this.edgeWeight = lacunaSettings.DYNAMIC_ANALYSER_THRESHOLD_WEIGHT;
         } else {
             this.edgeWeight = 0.5;
         }
