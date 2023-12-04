@@ -161,7 +161,7 @@ node-dev ./example/proj1_output/lacuna_lazyload_server.js
   "<analyzer-name>": "<threshold-value>"
 }
 ```
-- Valid values for <analyzer-name> are: (static, dynamic, nativecalls, acg, jelly, tajs, wala)
+- Valid values for <analyzer-name> are: (static, dynamic, nativecalls, acg, jelly, tajs, wala, npm_cg)
 - Valid threshold value ranges from 0 to 1 (eg: 0.5, 0.6)
 
 eg:
@@ -191,12 +191,23 @@ functions.
 Very similar to the static analyzer wich the main difference is that it only
 considers JavaScript native functions.
 
+##### acg
+Abstract call graph is our implementation of field-based approach for static analysis.
+
+NOTE: Static, nativecalls and ACG analyzers internally make use of the js-callgraph analyzer that has been adapted for the needs of Lacuna as a part of the following forked repository:
+[js-callgraph](https://github.com/ishaskul/js-callgraph)
+original repository: [js-callgraph](https://github.com/gaborantal/js-callgraph)
+
 ##### dynamic
 A basic dynamic analyzer that starts up a puppeteer webdriver and marks every
 function that is executed on startup as alive.
 
 ##### wala
 Based on the internal callgraphs of IBM WALA. WALA supports up to ES5 syntax only as of now. 
+
+##### npm_cg
+npm_cg is a handy tool for producing call graphs from JavaScript source code. It has a limitation in that it can consider a single JavaScript file at a time only
+original repository: [npm_cg](https://github.com/gunar/callgraph)
 
 ##### TAJS
 Based on TAJS
