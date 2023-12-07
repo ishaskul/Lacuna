@@ -14,7 +14,7 @@ let argv = null;
 try {
     argv = commandLineArgs([
         { name: 'directory', type: String, defaultOption: true }, // obviously has no default option
-        { name: 'analyzer', type: String, multiple: true, alias: 'a' },
+        { name: 'analyzer', type: Object, multiple: false, alias: 'a', defaultValue : '{}' },
 
         { name: 'entry', type: String, alias: 'e' },
         { name: 'olevel', type: Number, alias: 'o' },

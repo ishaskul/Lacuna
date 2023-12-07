@@ -4,6 +4,7 @@ module.exports = {
      */
     ANALYZERS_DIR: "analyzers",
     ANALYZER_TIMEOUT: 5000, // miliseconds
+    STATIC_ANALYZERS: ['static','nativecalls','acg'],
 
 
     /**
@@ -58,4 +59,5 @@ module.exports = {
         return `${functionData.file}[${functionData.bodyRange[0]}:${functionData.bodyRange[1]}]`;
     },
     
+    DYNAMIC_ANALYSER_THRESHOLD_WEIGHT: 1,
 }

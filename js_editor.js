@@ -8,13 +8,13 @@
  */
 
 const fs = require("fs"),
-    esprima = require("esprima"),
+    espree = require("espree"),
     path = require("path");
 
 require("./prototype_extension");
 
 
-const ESPRIMA_FUNCTION_TYPES = ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression'];
+const ESPREE_FUNCTION_TYPES = ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression'];
 module.exports = class JsEditor {
     constructor(filePath = null) {
         if (filePath) { this.loadFile(filePath); }
@@ -41,8 +41,16 @@ module.exports = class JsEditor {
         var index = 0;
 
         try {
-            esprima.parse(this.source, { range: true, loc: true }, (node) => {
-                if (ESPRIMA_FUNCTION_TYPES.includes(node.type)) {
+            const ast = espree.parse(this.source, { ecmaVersion: 14,
+                range: true, 
+                loc: true,
+                ecmaFeatures: {
+                   jsx: true,
+                   globalReturn: true
+                }});
+            
+                traverseAST(ast, (node) => {
+                if (ESPREE_FUNCTION_TYPES.includes(node.type)) {
                     var functionName = null;
                     if (node.id && node.id.name) {
                         functionName = node.id.name;
@@ -136,4 +144,14 @@ function getRandomFilename(length) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
   
     return text;
+}
+
+function traverseAST(ast, callback) {
+	callback(ast);
+  
+	for (const node in ast) {
+	  if (ast[node] && typeof ast[node] === 'object') {
+		traverseAST(ast[node], callback);
+	  }
+	}
 }

@@ -20,7 +20,8 @@ module.exports = class HTMLEditor {
     loadFile(filePath) {
         this.filePath = filePath; /* relative to pwd */
         this.source = this.originalSource = fs.readFileSync(filePath).toString();
-        this.html = this.originalHtml = cheerio.load(this.source);
+        const $ = cheerio.load(this.source);
+        this.html = this.originalHtml = $;
         return this;
     }
 
@@ -37,6 +38,9 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) { return; }
 
             /* Assume the script is hosted on same server */
@@ -82,11 +86,11 @@ module.exports = class HTMLEditor {
      * The index function may fail when there are weird linebreaks
      */
     updateCode(oldCode, newCode) {
-        var index = this.source.indexOf(oldCode); 
-        if (index < 0) {
+        if (oldCode.length < 0) {
             return logger.error(`[html_editor] cannot update code: '${oldCode}' not found`);
         }
-        this.source = this.source.splice(index, oldCode.length, newCode);
+        oldCode.replaceWith(newCode)
+        this.source = this.html.html();
     }
 
     saveFile() {
@@ -103,6 +107,9 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) return;
 
             var scriptSrc = cScriptElement.attribs["src"];
@@ -147,7 +154,7 @@ module.exports = class HTMLEditor {
     /**
      * Exports all internal JS scrips to their own file
      */
-    exportInternalScripts(directory) {
+    exportInternalScripts(directory, entryFile) {
         var cScripts = this.html('script');
 
         cScripts.each((index, cScriptElement) => {
@@ -155,10 +162,16 @@ module.exports = class HTMLEditor {
 
             /* If the type attribute is set it should be valid for JS */
             var scriptType = cScriptElement.attribs["type"];
+            if(scriptType != undefined) {
+                scriptType = scriptType.toLowerCase();
+            }
             if (scriptType && !VALID_JS_TYPES.includes(scriptType)) { return; }
             
+            // Add a unique id to each script element
+            this.html(cScriptElement).attr('id', `script_${index}`);
+
             /* Store the inline script into a local file */
-            var inlineScriptContent = cheerio(cScriptElement).html();
+            var inlineScriptContent = this.html(cScriptElement).html();
             var randomFileName = "exported_" + getRandomFilename(6) + ".js";
             var relativeFilePath = path.join(lacunaSettings.LACUNA_OUTPUT_DIR, randomFileName); /* relative to the project */
             var filePath = path.join(directory, relativeFilePath); /* relative to pwd */
@@ -166,13 +179,17 @@ module.exports = class HTMLEditor {
 
             /* Since the lacuna_cache resides at the framework directory level, references should take it into account */
             var relativePathDifference = path.relative(directory, entryFile);
+
             var numberOfNestedDirectories = relativePathDifference.split("/").length - 1; // counts the number of directories between the directory and the entry file
-            var relDirFix = "../".repeat(numberOfNestedDirectories);
+
+            // var relDirFix = "../".repeat(numberOfNestedDirectories);
+            var relDirFix = "./"
 
             /* Update the reference */
             var oldReference = this.html.html(cScriptElement);
+            var scriptElementToBeReplaced = this.html(`#script_${index}`)
             var newReference = `<script src="${path.join(relDirFix, relativeFilePath)}"></script>`;
-            this.updateCode(oldReference, newReference);
+            this.updateCode(scriptElementToBeReplaced, newReference);
             this.saveFile();
 
 

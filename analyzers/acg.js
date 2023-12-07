@@ -5,8 +5,7 @@ test.js@8:44-47 -> test.js@1:0-42
  */
 
 
-const path = require("path"),
-    acgAnalyzer = require('./acg/acg_runner');
+const path = require("path");
 
 module.exports = function () {
     this.run = function (runOptions, callGraph, scripts, callback) {
@@ -63,7 +62,7 @@ function getSrcPath(pwdPath, runOptions) {
     if (dir != srcPath.slice(0, dir.length)) {
         logger.warn("[getSrcPath] invalid path: ", getSrcPath);
     }
-    return srcPath.slice(dir.length + 1);
+    return srcPath.slice(dir.length);
 }
 
 /**
@@ -97,3 +96,6 @@ function acgToLacunaFormatter(acgEdges) {
     return edges;
 }
 
+module.exports.acgToLacunaFormatter = acgToLacunaFormatter;
+module.exports.basenameToScriptSrc = basenameToScriptSrc;
+module.exports.getSrcPath = getSrcPath;

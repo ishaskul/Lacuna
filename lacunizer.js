@@ -3,7 +3,7 @@
  * Kishan Nirghin
  * 
  * @description
- * This file retrieves all functions of the project (with the help of ESprima)
+ * This file retrieves all functions of the project (with the help of Espree)
  * Creates the call_graph with nodes representing the functions
  * Execute all chosen analyzers on the project
  *  -> which will create the edges in the call_graph
@@ -23,8 +23,12 @@ const lacunaSettings = require("./_settings");
 function run(runOptions, onFinish) {
     /* Creates the complete callgraph using the analyzers */
     createCompleteCallGraph(runOptions, (callGraph, analyzerResults) => {
-
-        /* After the callgraph is completed, remove the dead functions from their files */
+       
+        /* After the callgraph is completed, remove edges from the callgraph which have weight lower than the threshold */
+        removeEdgesBelowThreshold(runOptions, callGraph, 'nodes');
+        removeEdgesBelowThreshold(runOptions, callGraph, 'rootNodes'); //same process for the root nodes as well
+        
+        /* After removing the edges from the callgraphs, remove the dead functions from their files */
         optimizeFiles(runOptions, callGraph);
 
         /* Once that is finished, do the callback */
@@ -55,6 +59,32 @@ function optimizeFiles(runOptions, callGraph) {
     /* Export the lazy load storage if needed */
     if (runOptions.olevel == 1) {
         lazyLoader.exportStorage(runOptions.directory);
+    }
+}
+
+/**
+ * Removes the edges from callgraph which have a weight lower than the threshold specified
+ * It iterates through each node of the callgraph and checks for each edge if the edge weight is lower t
+ * 
+ * If the weight is found to be lower, it removed the edge from CG for the analyzer that generated it in the first place
+ */
+function removeEdgesBelowThreshold(runOptions, callGraph, nodesType) {
+    if (callGraph.hasOwnProperty(nodesType)) {
+        for (const [nodeIndex, node] of callGraph[nodesType].entries()) {
+            if (node.edges.length != 0) {
+                // Iterate over each edge inside the node
+                for (let edgeIndex = 0; edgeIndex < (node.edges).length; edgeIndex++) {
+                    var thresholdWeight = parseFloat(runOptions.analyzer[node.edges[edgeIndex].analyzer]);
+                    if (node.edges[edgeIndex].weight < thresholdWeight) {
+                        // remove the edge
+                        callGraph[nodesType][nodeIndex].edges.splice(edgeIndex, 1);
+                        edgeIndex = edgeIndex - 1;
+                    }
+                }
+            }
+        }
+    } else {
+        logger.warn("Empty callgraph");
     }
 }
 
@@ -125,7 +155,7 @@ async function createCompleteCallGraph(runOptions, onCallGraphComplete) {
     var callGraph = new CallGraph(retrieveFunctions(scripts));
 
     /* Part 2: running every analyzer to create edges in the callgraph */
-    var analyzers = retrieveAnalyzers(runOptions.analyzer);
+    var analyzers = retrieveAnalyzers(Object.keys(runOptions.analyzer));
     var analyzerResults = [];
     var analyzersCompleted = {}; // wait for all analyzers to be finished
 
@@ -167,6 +197,7 @@ async function createCompleteCallGraph(runOptions, onCallGraphComplete) {
 function runAnalyzer(analyzer, runOptions, callGraph, scripts) {
     return new Promise((resolve, reject) => {
         try {
+            runOptions.currentlyRunningAnalyzer = analyzer.name;
             /* The analyzers essentially have all project information available */
             analyzer.object.run(runOptions, callGraph, scripts, (edges) => {
                 if (!edges) { edges = []; }
@@ -359,7 +390,11 @@ function retrieveAnalyzers(analyzerNames) {
     var analyzers = [];
 
     analyzerNames.forEach((analyzerName) => {
+        if (lacunaSettings.STATIC_ANALYZERS.includes(analyzerName)) {
+        var analyzerRequirePath = "./" + path.join(lacunaSettings.ANALYZERS_DIR, 'js-callgraph');
+        } else {
         var analyzerRequirePath = "./" + path.join(lacunaSettings.ANALYZERS_DIR, analyzerName);
+        }
         try {
             var Analyzer = require(analyzerRequirePath);
             analyzers.push({ name: analyzerName, object: new Analyzer() });

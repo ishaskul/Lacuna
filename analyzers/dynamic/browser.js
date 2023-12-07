@@ -45,7 +45,7 @@ module.exports = function()
 		var url = "http://localhost:" + port + "/" + entry; //"/" + urlDir +
 		
 		return new Promise(async (resolve, reject) => {
-			this.browser = await puppeteer.launch({headless: false}); // await
+			this.browser = await puppeteer.launch({headless: false, executablePath: '/snap/bin/chromium'}); // await
 			this.page = await this.browser.newPage();
 			
 			var consoleLogs = [];
