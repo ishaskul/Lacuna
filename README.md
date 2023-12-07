@@ -1,8 +1,9 @@
 # Lacuna 
 An approach for JavaScript dead code elimination, where existing JavaScript analysis techniques are applied in combination.
 
-#### Workflow:
-<img src="./example/test/workflow.png" alt="Workflow of Lacuna">
+<p align="center">
+<img src="./example/test/workflow.png" alt="Workflow of Lacuna" width="500"/>
+</p>
 
 ## Publications about Lacuna
 
