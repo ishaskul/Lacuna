@@ -242,8 +242,7 @@ entirely could break the application.
 
 #### Weight threshold value
 As a part of the --argument a threshold value is required to be specified for each analyzer as mentioned above. 
-Lacuna internally uses this threshold value to optimize the code further by eliminating callgraph edges t
-hat lie below the threshold.
+Lacuna internally uses this threshold value to optimize the code further by eliminating callgraph edges that lie below the threshold.
 
 #### Entry
 The entry file, relative to the sourceFolder, that will serve as a starting 
@@ -283,7 +282,7 @@ will store them in the same local file under the name jquery-3.4.0.min.js.
 
 ## Development
 ### Overview of recent enhancements
-- Since Esprima has not been developed further since many years, Lacuna has been updated to use Espree as the ECMAScript parsing infrastructure. Espree is compatible with Esprime format and it supports the latest ECMAScript
+- Since Esprima has not been developed further for many years, Lacuna has been updated to use Espree as the ECMAScript parsing infrastructure. Espree is compatible with Esprima format and it supports the latest ECMAScript
 - All the underlying dependencies of Lacuna have been updated to the latest versions
 - Lacuna supports ES6 syntax for all analyzers except TAJS and WALA analyzers
 - Jelly analyzer adapted has been integrated in lacuna
