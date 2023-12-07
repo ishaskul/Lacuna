@@ -1,6 +1,9 @@
 # Lacuna 
 An approach for JavaScript dead code elimination, where existing JavaScript analysis techniques are applied in combination.
 
+#### Workflow:
+<img src="./example/test/workflow.png" alt="Workflow of Lacuna">
+
 ## Publications about Lacuna
 
 A in-depth description of the Lacuna approach, its implementation, its internal and external evaluation, and an empirical study on the overhead of JavaScript dead code on the energy and performance of mobile Web apps, please refer to the following publication:
